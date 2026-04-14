@@ -478,43 +478,50 @@
         <div class="job-card-top"><div class="job-icon">🍽️</div><span class="job-slots">2 locuri</span></div>
         <div class="job-title">Chelner / Chelneriță</div>
         <div class="job-desc">Interacționezi cu clienții, preiei comenzile și asiguri o experiență de neuitat la masă.</div>
-        <div class="job-salary">de la 6 000 lei + bacșișuri</div>
+        <div class="job-salary">de la 9 000 lei</div>
         <span class="job-tag">Full-time / Part-time</span>
       </a>
-      <a href="#aplica" class="job-card" data-job="Pizzar">
+      <a href="#aplica" class="job-card" data-job="Pizzar / Ajutor de pizzar">
         <div class="job-card-top"><div class="job-icon">🍕</div><span class="job-slots">1 loc</span></div>
-        <div class="job-title">Pizzar</div>
+        <div class="job-title">Pizzar / Ajutor de pizzar</div>
         <div class="job-desc">Pregătești pizza autentică după rețetele Corso. Experiența e un plus, pasiunea e obligatorie.</div>
-        <div class="job-salary">de la 8 000 lei</div>
+        <div class="job-salary">de la 10 000 lei</div>
         <span class="job-tag">Full-time</span>
       </a>
       <a href="#aplica" class="job-card" data-job="Bucătar">
         <div class="job-card-top"><div class="job-icon">👨‍🍳</div><span class="job-slots">2 locuri</span></div>
         <div class="job-title">Bucătar</div>
         <div class="job-desc">Gătești preparate din meniu, respecți standardele de calitate și igienă.</div>
-        <div class="job-salary">de la 8 000 lei</div>
+        <div class="job-salary">de la 10 000 lei</div>
         <span class="job-tag">Full-time</span>
       </a>
       <a href="#aplica" class="job-card" data-job="Barman">
         <div class="job-card-top"><div class="job-icon">🍹</div><span class="job-slots">1 loc</span></div>
         <div class="job-title">Barman</div>
         <div class="job-desc">Prepari băuturi, gestionezi barul și creezi atmosferă bună pentru fiecare client.</div>
-        <div class="job-salary">de la 6 000 lei + bacșișuri</div>
+        <div class="job-salary">de la 12 000 lei</div>
         <span class="job-tag">Full-time / Part-time</span>
       </a>
       <a href="#aplica" class="job-card" data-job="Casier">
         <div class="job-card-top"><div class="job-icon">💳</div><span class="job-slots">1 loc</span></div>
         <div class="job-title">Casier</div>
         <div class="job-desc">Procesezi plățile, ajuți clienții la finalizarea comenzilor.</div>
-        <div class="job-salary">de la 6 000 lei</div>
+        <div class="job-salary">de la 12 000 lei</div>
         <span class="job-tag">Full-time</span>
       </a>
       <a href="#aplica" class="job-card" data-job="Administrator">
         <div class="job-card-top"><div class="job-icon">📋</div><span class="job-slots">urgent</span></div>
         <div class="job-title">Administrator</div>
         <div class="job-desc">Coordonezi echipa, asiguri standardele de serviciu și rezolvi situațiile operaționale.</div>
-        <div class="job-salary">de la 12 000 lei</div>
+        <div class="job-salary">de la 15 000 lei</div>
         <span class="job-tag">Experiență necesară</span>
+      </a>
+      <a href="#aplica" class="job-card" data-job="Deridicătoare">
+        <div class="job-card-top"><div class="job-icon">🧹</div><span class="job-slots">1 loc</span></div>
+        <div class="job-title">Deridicătoare</div>
+        <div class="job-desc">Menții curățenia și ordinea în restaurant, asiguri un mediu plăcut pentru clienți și colegi.</div>
+        <div class="job-salary">de la 9 000 lei</div>
+        <span class="job-tag">Full-time</span>
       </a>
     </div>
   </div>
@@ -593,7 +600,7 @@
           <div class="calc-label">Post</div>
           <select class="calc-select" id="calcPost" onchange="calcSalary()">
             <option value="chelner">Chelner / Chelneriță</option>
-            <option value="pizzar">Pizzar</option>
+            <option value="pizzar">Pizzar / Ajutor de pizzar</option>
             <option value="bucatar">Bucătar</option>
             <option value="barman">Barman</option>
             <option value="casier">Casier</option>
@@ -643,12 +650,12 @@
             <select id="position" required>
               <option value="">— Selectează postul —</option>
               <option>Chelner / Chelneriță</option>
-              <option>Pizzar</option>
+              <option>Pizzar / Ajutor de pizzar</option>
               <option>Bucătar</option>
               <option>Barman</option>
               <option>Casier</option>
               <option>Administrator</option>
-              <option>Marketing Specialist</option>
+              <option>Deridicătoare</option>
               <option>Alt post</option>
             </select>
           </div>
@@ -686,11 +693,12 @@
               <select id="refPosition">
                 <option value="">— Selectează —</option>
                 <option>Chelner / Chelneriță</option>
-                <option>Pizzar</option>
+                <option>Pizzar / Ajutor de pizzar</option>
                 <option>Bucătar</option>
                 <option>Barman</option>
                 <option>Casier</option>
                 <option>Administrator</option>
+                <option>Deridicătoare</option>
               </select>
             </div>
             <button type="submit" class="ref-submit">Trimite recomandarea →</button>
@@ -795,12 +803,12 @@
 
   // ── Salary calculator
   const salaryData = {
-    chelner:  { full: [7000, 2500], part: [4500, 1500] },
-    pizzar:   { full: [11000, 0],   part: [7000, 0] },
-    bucatar:  { full: [11500, 0],   part: [7500, 0] },
-    barman:   { full: [7500, 2000], part: [4500, 1200] },
-    casier:   { full: [7000, 0],    part: [4500, 0] },
-    admin:    { full: [16000, 0],   part: [10000, 0] },
+    chelner:  { full: [9000, 0],  part: [5000, 0] },
+    pizzar:   { full: [10000, 0], part: [6500, 0] },
+    bucatar:  { full: [10000, 0], part: [6500, 0] },
+    barman:   { full: [12000, 0], part: [7000, 0] },
+    casier:   { full: [12000, 0], part: [7000, 0] },
+    admin:    { full: [15000, 0], part: [10000, 0] },
   };
 
   function fmt(n) { return n.toLocaleString('ro-MD'); }
