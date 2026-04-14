@@ -726,9 +726,32 @@
     });
   });
 
+  const TG_TOKEN = '8739959680:AAHaEbBCRfziiyqBVigi8erLZQBFjPIDGmE';
+  const TG_CHAT  = '-1003662936262';
+
+  function sendTelegram(text) {
+    fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TG_CHAT, text: text, parse_mode: 'HTML' })
+    });
+  }
+
   // ── Apply form submit
   document.getElementById('applyForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    const name     = document.getElementById('name').value;
+    const phone    = document.getElementById('phone').value;
+    const position = document.getElementById('position').value;
+    const message  = document.getElementById('message').value;
+    const msg =
+      '🟢 <b>Candidatură nouă — Corso HR</b>\n' +
+      '👤 <b>Nume:</b> ' + name + '\n' +
+      '📞 <b>Telefon:</b> ' + phone + '\n' +
+      '💼 <b>Post:</b> ' + (position || '—') + '\n' +
+      '💬 <b>Mesaj:</b> ' + (message || '—') + '\n' +
+      '📌 <b>Tip:</b> Aplicare directă';
+    sendTelegram(msg);
     this.style.display = 'none';
     document.getElementById('successMsg').style.display = 'block';
   });
@@ -736,6 +759,18 @@
   // ── Referral form submit
   document.getElementById('refForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    const myName      = document.getElementById('refMyName').value;
+    const friendName  = document.getElementById('refFriendName').value;
+    const friendPhone = document.getElementById('refFriendPhone').value;
+    const refPosition = document.getElementById('refPosition').value;
+    const msg =
+      '🎁 <b>Recomandare nouă — Corso HR</b>\n' +
+      '👤 <b>Recomandat:</b> ' + friendName + '\n' +
+      '📞 <b>Telefon:</b> ' + friendPhone + '\n' +
+      '💼 <b>Post:</b> ' + (refPosition || '—') + '\n' +
+      '🙋 <b>Recomandat de:</b> ' + (myName || 'anonim') + '\n' +
+      '📌 <b>Tip:</b> Recomandare';
+    sendTelegram(msg);
     this.querySelectorAll('input,select').forEach(el => el.disabled = true);
     this.querySelector('.ref-submit').style.display = 'none';
     document.getElementById('refSuccess').style.display = 'block';
