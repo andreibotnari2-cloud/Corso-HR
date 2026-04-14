@@ -618,8 +618,8 @@
       <div class="calc-result">
         <div>
           <div class="calc-result-label">Estimare lunară</div>
-          <div class="calc-result-num" id="calcTotal">~ 9 500 lei</div>
-          <div class="calc-result-sub">salariu + bacșișuri estimate</div>
+          <div class="calc-result-num" id="calcTotal">de la 9 500 lei</div>
+          <div class="calc-result-sub">salariu estimat lunar</div>
         </div>
         <div class="calc-breakdown">
           <div class="calc-item"><div class="calc-item-num" id="calcBase">7 000</div><div class="calc-item-label">salariu bază</div></div>
@@ -819,7 +819,7 @@
     const [base, tips] = salaryData[post][program];
     document.getElementById('calcBase').textContent  = fmt(base);
     document.getElementById('calcTips').textContent  = fmt(tips);
-    document.getElementById('calcTotal').textContent = '~ ' + fmt(base + tips) + ' lei';
+    document.getElementById('calcTotal').textContent = 'de la ' + fmt(base + tips) + ' lei';
   }
 
   calcSalary();
