@@ -437,7 +437,7 @@
     <div class="hero-badge">Angajare</div>
     <div class="live-counter">
       <span class="live-dot"></span>
-      <span id="liveCount">7</span> posturi libere azi
+      <span id="liveCount">7</span> posturi libere · <span id="liveDateLabel"></span>
     </div>
   </div>
   <h1>Vino în echipa<br><span class="accent">Corso.</span></h1>
@@ -740,6 +740,13 @@
     this.querySelector('.ref-submit').style.display = 'none';
     document.getElementById('refSuccess').style.display = 'block';
   });
+
+  // ── Live date label
+  (function() {
+    const d = new Date();
+    const months = ['ian','feb','mar','apr','mai','iun','iul','aug','sep','oct','nov','dec'];
+    document.getElementById('liveDateLabel').textContent = d.getDate() + ' ' + months[d.getMonth()];
+  })();
 
   // ── Live counter (slowly decrements for urgency feel)
   const liveEl = document.getElementById('liveCount');
