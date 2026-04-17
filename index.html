@@ -622,7 +622,7 @@
           <div class="calc-result-sub">salariu estimat lunar</div>
         </div>
         <div class="calc-breakdown">
-          <div class="calc-item"><div class="calc-item-num" id="calcBase">7 000</div><div class="calc-item-label">salariu bază</div></div>
+          <div class="calc-item"><div class="calc-item-num" id="calcBase">7 000</div><div class="calc-item-label">fix + procente</div></div>
           <div class="calc-item"><div class="calc-item-num" id="calcTips">2 500</div><div class="calc-item-label">bacșișuri est.</div></div>
         </div>
       </div>
@@ -803,12 +803,12 @@
 
   // ── Salary calculator
   const salaryData = {
-    chelner:  { full: [9000, 0],  part: [5000, 0] },
-    pizzar:   { full: [10000, 0], part: [6500, 0] },
-    bucatar:  { full: [10000, 0], part: [6500, 0] },
-    barman:   { full: [12000, 0], part: [7000, 0] },
-    casier:   { full: [12000, 0], part: [7000, 0] },
-    admin:    { full: [15000, 0], part: [10000, 0] },
+    chelner:  { full: [4500, 4500], part: [3000, 2000] },
+    pizzar:   { full: [10000, 0],   part: [6500, 0] },
+    bucatar:  { full: [10000, 0],   part: [6500, 0] },
+    barman:   { full: [4500, 7500], part: [3000, 4000] },
+    casier:   { full: [12000, 0],   part: [7000, 0] },
+    admin:    { full: [15000, 0],   part: [10000, 0] },
   };
 
   function fmt(n) { return n.toLocaleString('ro-MD'); }
