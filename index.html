@@ -313,7 +313,7 @@
   .calc-select option { background: #555; }
   .calc-result {
     background: var(--orange); border-radius: 16px; padding: 28px 32px;
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: gap;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
   }
   .calc-result-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,.8); margin-bottom: 4px; }
   .calc-result-num { font-size: 38px; font-weight: 900; color: var(--white); line-height: 1; }
@@ -405,17 +405,72 @@
 
   /* ── MOBILE ── */
   @media (max-width: 768px) {
-    header { padding: 0 20px; }
+    /* Header */
+    header { padding: 0 16px; height: 60px; }
     .header-phone { display: none; }
-    .hero, .team-strip { padding-left: 20px; padding-right: 20px; }
-    .section { padding: 56px 20px; }
-    .form-section { padding: 56px 20px; }
-    .form-grid { grid-template-columns: 1fr; gap: 40px; }
-    .form-row-2 { grid-template-columns: 1fr; }
-    .calc-row { grid-template-columns: 1fr; }
-    .stat { min-width: 120px; padding: 24px 10px; }
+
+    /* Hero */
+    .hero { padding: 40px 16px 36px; }
+    .hero-badge { font-size: 17px; padding: 9px 22px; letter-spacing: 1px; }
+    .live-counter { font-size: 12px; padding: 6px 14px; margin-left: 0; }
+    .hero h1 { letter-spacing: -1px; }
+    .hero-sub { font-size: 15px; margin-bottom: 28px; }
+    .hero-btns { flex-direction: column; align-items: stretch; gap: 10px; }
+    .hero-btns a { text-align: center; justify-content: center; padding: 15px 24px; }
+
+    /* Team */
+    .team-strip { padding-left: 0; padding-right: 0; }
+    .team-badge { font-size: 14px; padding: 9px 20px; letter-spacing: 2px; }
+
+    /* Stats — grilă 2×2 */
+    .stats { display: grid; grid-template-columns: 1fr 1fr; }
+    .stat { border-right: none; border-bottom: 1px solid #eee; min-width: unset; padding: 20px 10px; }
+    .stat:nth-child(odd) { border-right: 1px solid #eee; }
+    .stat:nth-last-child(-n+2) { border-bottom: none; }
+    .stat-num { font-size: 28px; }
+
+    /* Secțiuni */
+    .section { padding: 48px 16px; }
+    .section-title { margin-bottom: 32px; }
+    .form-section { padding: 48px 16px; }
+
+    /* Posturi — o coloană */
+    .jobs-grid { grid-template-columns: 1fr; gap: 12px; }
+    .job-card { padding: 20px; }
+
+    /* De ce — o coloană */
+    .why-grid { grid-template-columns: 1fr; gap: 12px; }
+
+    /* Timeline */
     .timeline::before { left: 44px; }
+    .tl-item { gap: 16px; padding: 14px 0; }
+    .tl-time { min-width: 60px; font-size: 12px; }
+
+    /* Calculator */
+    .calc-box { padding: 20px 16px; border-radius: 16px; }
+    .calc-row { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
+    .calc-result { flex-direction: column; gap: 12px; padding: 20px 18px; align-items: flex-start; }
+    .calc-result-num { font-size: 30px; }
+    .calc-breakdown { gap: 20px; }
+
+    /* Formular */
+    .form-grid { grid-template-columns: 1fr; gap: 32px; }
+    .form-row-2 { grid-template-columns: 1fr; }
+    .form-submit { align-self: stretch; text-align: center; width: 100%; }
+
+    /* WhatsApp float */
+    .wa-float { width: 52px; height: 52px; bottom: 20px; right: 16px; }
     .wa-tooltip { display: none; }
+
+    /* Footer */
+    footer { padding: 20px 16px; }
+  }
+
+  @media (max-width: 400px) {
+    .hero-badge { font-size: 14px; padding: 8px 16px; }
+    .hero h1 { letter-spacing: -.5px; }
+    .tl-time { min-width: 52px; }
+    .timeline::before { left: 38px; }
   }
 </style>
 </head>
