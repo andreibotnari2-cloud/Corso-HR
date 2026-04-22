@@ -56,7 +56,7 @@
     "employmentType": "FULL_TIME",
     "datePosted": "2026-04-01",
     "validThrough": "2026-12-31",
-    "baseSalary": { "@type": "MonetaryAmount", "currency": "MDL", "value": { "@type": "QuantitativeValue", "minValue": 9000, "maxValue": 18000, "unitText": "MONTH" } }
+    "baseSalary": { "@type": "MonetaryAmount", "currency": "MDL", "value": { "@type": "QuantitativeValue", "description": "fix + procent", "unitText": "MONTH" } }
   },
   {
     "@context": "https://schema.org",
@@ -478,7 +478,7 @@
         <div class="job-card-top"><div class="job-icon">🍽️</div><span class="job-slots">2 locuri</span></div>
         <div class="job-title">Chelner / Chelneriță</div>
         <div class="job-desc">Interacționezi cu clienții, preiei comenzile și asiguri o experiență de neuitat la masă.</div>
-        <div class="job-salary">de la 9 000 lei</div>
+        <div class="job-salary">fix + procent</div>
         <span class="job-tag">Full-time / Part-time</span>
       </a>
       <a href="#aplica" class="job-card" data-job="Pizzar / Ajutor de pizzar">
@@ -816,6 +816,12 @@
   function calcSalary() {
     const post    = document.getElementById('calcPost').value;
     const program = document.getElementById('calcProgram').value;
+    if (post === 'chelner') {
+      document.getElementById('calcTotal').textContent = 'fix + procent';
+      document.getElementById('calcBase').textContent  = '—';
+      document.getElementById('calcTips').textContent  = '—';
+      return;
+    }
     const [base, tips] = salaryData[post][program];
     document.getElementById('calcBase').textContent  = fmt(base);
     document.getElementById('calcTips').textContent  = fmt(tips);
