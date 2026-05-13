@@ -4,6 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '795674856491309');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=795674856491309&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
 <!-- Primary SEO -->
 <title>Angajare Corso Pizza Chișinău 2026 — Chelner, Pizzar, Bucătar, Barman</title>
 <meta name="description" content="Lucrează la Corso Pizza — cel mai apreciat restaurant din Chișinău. Locuri de muncă: chelner, pizzar, bucătar, barman, casier, administrator. Salariu competitiv + bacșișuri. Aplică acum!">
@@ -700,6 +718,9 @@
             <div><label>Nume complet *</label><input type="text" id="name" placeholder="Ion Popescu" required></div>
             <div><label>Telefon *</label><input type="tel" id="phone" placeholder="+373 6XX XXX XXX" required></div>
           </div>
+          <div class="form-row-2">
+            <div><label>Vârsta *</label><input type="number" id="age" placeholder="ex: 24" min="16" max="65" required></div>
+          </div>
           <div>
             <label>Post dorit *</label>
             <select id="position" required>
@@ -712,6 +733,36 @@
               <option>Administrator</option>
               <option>Deridicătoare</option>
               <option>Alt post</option>
+            </select>
+          </div>
+          <div>
+            <label>În ce sector / localitate locuiești? *</label>
+            <select id="sector" required>
+              <option value="">— Selectează zona —</option>
+              <optgroup label="Chișinău">
+                <option>Centru</option>
+                <option>Botanica</option>
+                <option>Buiucani</option>
+                <option>Ciocana</option>
+                <option>Rîșcani</option>
+                <option>Telecentru</option>
+                <option>Sculeni</option>
+              </optgroup>
+              <optgroup label="Suburbii">
+                <option>Codru</option>
+                <option>Durlești</option>
+                <option>Stăuceni</option>
+                <option>Cricova</option>
+                <option>Ghidighici</option>
+                <option>Trușeni</option>
+                <option>Vadul lui Vodă</option>
+              </optgroup>
+              <optgroup label="Altă localitate">
+                <option>Strășeni</option>
+                <option>Ialoveni</option>
+                <option>Anenii Noi</option>
+                <option>Altă localitate</option>
+              </optgroup>
             </select>
           </div>
           <div><label>Câteva cuvinte despre tine</label><textarea id="message" placeholder="Experiența anterioară, disponibilitate, de ce vrei să lucrezi la Corso..."></textarea></div>
@@ -805,16 +856,22 @@
     e.preventDefault();
     const name     = document.getElementById('name').value;
     const phone    = document.getElementById('phone').value;
+    const age      = document.getElementById('age').value;
     const position = document.getElementById('position').value;
+    const sector   = document.getElementById('sector').value;
     const message  = document.getElementById('message').value;
     const msg =
       '🟢 <b>Candidatură nouă — Corso HR</b>\n' +
       '👤 <b>Nume:</b> ' + name + '\n' +
       '📞 <b>Telefon:</b> ' + phone + '\n' +
+      '🎂 <b>Vârsta:</b> ' + (age || '—') + ' ani\n' +
       '💼 <b>Post:</b> ' + (position || '—') + '\n' +
+      '📍 <b>Sector:</b> ' + (sector || '—') + '\n' +
       '💬 <b>Mesaj:</b> ' + (message || '—') + '\n' +
       '📌 <b>Tip:</b> Aplicare directă';
     sendTelegram(msg);
+    fbq('track', 'Lead', { content_name: 'Aplicare formular', content_category: position || 'General' });
+    corsoSaveLead({ age: parseInt(age) || null, position: position || null, sector: sector || null });
     this.style.display = 'none';
     document.getElementById('successMsg').style.display = 'block';
   });
@@ -834,9 +891,28 @@
       '🙋 <b>Recomandat de:</b> ' + (myName || 'anonim') + '\n' +
       '📌 <b>Tip:</b> Recomandare';
     sendTelegram(msg);
+    fbq('track', 'Lead', { content_name: 'Recomandare prieten', content_category: refPosition || 'General' });
     this.querySelectorAll('input,select').forEach(el => el.disabled = true);
     this.querySelector('.ref-submit').style.display = 'none';
     document.getElementById('refSuccess').style.display = 'block';
+  });
+
+  // ── WhatsApp clicks → Contact event
+  document.querySelectorAll('a[href*="wa.me"]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      fbq('track', 'Contact', { content_name: 'WhatsApp aplicare' });
+      corsoTrack('whatsapp');
+    });
+  });
+
+  // ── Phone clicks
+  document.querySelectorAll('a[href^="tel:"]').forEach(function(el) {
+    el.addEventListener('click', function() { corsoTrack('phone'); });
+  });
+
+  // ── Email clicks
+  document.querySelectorAll('a[href^="mailto:"]').forEach(function(el) {
+    el.addEventListener('click', function() { corsoTrack('email'); });
   });
 
   // ── Live date label
@@ -884,6 +960,59 @@
   }
 
   calcSalary();
+</script>
+
+<!-- ══ FIREBASE ANALYTICS TRACKING ══════════════════════════════════════
+     Înlocuiește valorile REPLACE_WITH_YOUR_* cu cele din Firebase Console
+     https://console.firebase.google.com → Project settings → General → Web app
+     ═══════════════════════════════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script>
+(function() {
+  var firebaseConfig = {
+    apiKey:            "REPLACE_WITH_YOUR_API_KEY",
+    authDomain:        "REPLACE_WITH_YOUR_PROJECT_ID.firebaseapp.com",
+    projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
+    storageBucket:     "REPLACE_WITH_YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
+    appId:             "REPLACE_WITH_YOUR_APP_ID"
+  };
+
+  if (firebaseConfig.apiKey.indexOf('REPLACE') !== -1) return;
+
+  try {
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.firestore();
+
+    window.corsoTrack = function(type) {
+      try {
+        var now = new Date();
+        db.collection('events').add({
+          type: type,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          hour: now.getHours(),
+          dayOfWeek: now.getDay()
+        });
+      } catch(e) {}
+    };
+
+    window.corsoSaveLead = function(data) {
+      try {
+        var now = new Date();
+        db.collection('leads').add(Object.assign({}, data, {
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          hour: now.getHours(),
+          dayOfWeek: now.getDay()
+        }));
+      } catch(e) {}
+    };
+
+    // Track page view
+    corsoTrack('pageview');
+
+  } catch(e) {}
+})();
 </script>
 </body>
 </html>
