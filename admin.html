@@ -6,8 +6,6 @@
 <title>Corso HR — Analytics</title>
 <meta name="robots" content="noindex, nofollow">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <style>
   :root {
     --orange: #FBB417;
@@ -334,18 +332,10 @@
 
 <script>
 // ══════════════════════════════════════════════════════
-// FIREBASE CONFIG
-// Înlocuiește valorile de mai jos cu cele din consola Firebase
-// https://console.firebase.google.com → Project settings → Web app
+// GOOGLE APPS SCRIPT URL
+// Înlocuiește cu URL-ul tău după ce deployezi scriptul
 // ══════════════════════════════════════════════════════
-const firebaseConfig = {
-  apiKey:            "REPLACE_WITH_YOUR_API_KEY",
-  authDomain:        "REPLACE_WITH_YOUR_PROJECT_ID.firebaseapp.com",
-  projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
-  storageBucket:     "REPLACE_WITH_YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
-  appId:             "REPLACE_WITH_YOUR_APP_ID"
-};
+const SCRIPT_URL = 'REPLACE_WITH_YOUR_SCRIPT_URL';
 
 // ══════════════════════════════════════════════════════
 // AUTENTIFICARE — SHA-256 al parolei 'corso2026admin'
@@ -364,7 +354,6 @@ async function checkPassword() {
     sessionStorage.setItem('corso_admin_ok', '1');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
-    initFirebase();
     loadData();
   } else {
     const err = document.getElementById('loginError');
@@ -383,46 +372,32 @@ function logout() {
 if (sessionStorage.getItem('corso_admin_ok') === '1') {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
-  initFirebase();
   loadData();
 }
 
 // ══════════════════════════════════════════════════════
-// FIREBASE + CHARTS
+// DATA + CHARTS
 // ══════════════════════════════════════════════════════
-let db;
 let charts = {};
-
-function initFirebase() {
-  if (firebaseConfig.apiKey.startsWith('REPLACE')) {
-    document.getElementById('setupBanner').style.display = 'block';
-    return;
-  }
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  db = firebase.firestore();
-}
 
 function showLoading(show) {
   document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
 }
 
 async function loadData() {
-  if (!db) {
+  if (SCRIPT_URL.indexOf('REPLACE') !== -1) {
     document.getElementById('setupBanner').style.display = 'block';
     renderEmptyCharts();
     return;
   }
   showLoading(true);
   try {
-    const [leadsSnap, eventsSnap] = await Promise.all([
-      db.collection('leads').orderBy('timestamp', 'desc').get(),
-      db.collection('events').orderBy('timestamp', 'desc').get()
-    ]);
+    const res  = await fetch(SCRIPT_URL);
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error);
 
-    const leads  = leadsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-    const events = eventsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const leads  = (json.leads  || []).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    const events = (json.events || []).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
     renderKPIs(leads, events);
     renderLeadsPerDay(leads);
@@ -437,6 +412,7 @@ async function loadData() {
       'Actualizat: ' + now.toLocaleTimeString('ro-MD', { hour: '2-digit', minute: '2-digit' });
   } catch (err) {
     console.error(err);
+    document.getElementById('lastUpdated').textContent = 'Eroare la încărcare';
   }
   showLoading(false);
 }
@@ -446,10 +422,10 @@ function renderKPIs(leads, events) {
   const today = new Date(); today.setHours(0,0,0,0);
   const week  = new Date(today); week.setDate(week.getDate() - 7);
 
-  const leadsToday = leads.filter(l => l.timestamp && l.timestamp.toDate() >= today).length;
-  const leadsWeek  = leads.filter(l => l.timestamp && l.timestamp.toDate() >= week).length;
+  const leadsToday = leads.filter(l => l.timestamp && new Date(l.timestamp) >= today).length;
+  const leadsWeek  = leads.filter(l => l.timestamp && new Date(l.timestamp) >= week).length;
   const waClicks   = events.filter(e => e.type === 'whatsapp').length;
-  const viewsToday = events.filter(e => e.type === 'pageview' && e.timestamp && e.timestamp.toDate() >= today).length;
+  const viewsToday = events.filter(e => e.type === 'pageview' && e.timestamp && new Date(e.timestamp) >= today).length;
 
   document.getElementById('kpiTotal').textContent    = leads.length;
   document.getElementById('kpiToday').textContent    = leadsToday;
@@ -475,7 +451,7 @@ function renderLeadsPerDay(leads) {
 
     const count = leads.filter(l => {
       if (!l.timestamp) return false;
-      const t = l.timestamp.toDate();
+      const t = new Date(l.timestamp);
       return t >= dayStart && t <= dayEnd;
     }).length;
 
@@ -486,7 +462,7 @@ function renderLeadsPerDay(leads) {
   const total30 = data.reduce((a, b) => a + b, 0);
   document.getElementById('countLeads30').textContent = total30 + ' lead-uri';
 
-  destroyChart('chartLeadsDay');
+  destroyChart('leadsDay');
   charts.leadsDay = new Chart(document.getElementById('chartLeadsDay'), {
     type: 'line',
     data: {
@@ -525,7 +501,7 @@ function renderAgeChart(leads) {
   const withAge = leads.filter(l => parseInt(l.age)).length;
   document.getElementById('countAge').textContent = withAge + ' cu vârstă';
 
-  destroyChart('chartAge');
+  destroyChart('age');
   charts.age = new Chart(document.getElementById('chartAge'), {
     type: 'bar',
     data: {
@@ -561,7 +537,7 @@ function renderSectorChart(leads) {
     '#FBB417','#7B8C7A','#4A90E2','#25D366','#E25454','#C67B1E','#9B7DE8'
   ];
 
-  destroyChart('chartSector');
+  destroyChart('sector');
   charts.sector = new Chart(document.getElementById('chartSector'), {
     type: 'doughnut',
     data: {
@@ -597,7 +573,7 @@ function renderPositionChart(leads) {
   const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
   document.getElementById('countPosition').textContent = leads.filter(l => l.position).length + ' aplică';
 
-  destroyChart('chartPosition');
+  destroyChart('position');
   charts.position = new Chart(document.getElementById('chartPosition'), {
     type: 'bar',
     data: {
@@ -625,7 +601,7 @@ function renderContactChart(events) {
   const total = wa + phone + email;
   document.getElementById('countContact').textContent = total + ' clicuri';
 
-  destroyChart('chartContact');
+  destroyChart('contact');
   charts.contact = new Chart(document.getElementById('chartContact'), {
     type: 'bar',
     data: {
@@ -650,7 +626,7 @@ function renderTable(leads) {
   }
   const months = ['ian','feb','mar','apr','mai','iun','iul','aug','sep','oct','nov','dec'];
   const rows = leads.map(l => {
-    const d = l.timestamp ? l.timestamp.toDate() : null;
+    const d = l.timestamp ? new Date(l.timestamp) : null;
     const dateStr = d ? `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}` : '—';
     const pos = l.position ? l.position.split('/')[0].trim() : '—';
     const sector = l.sector || '—';
@@ -671,20 +647,13 @@ function renderTable(leads) {
 }
 
 function renderEmptyCharts() {
-  ['chartLeadsDay','chartAge','chartSector','chartPosition','chartContact'].forEach(id => {
-    document.getElementById(id).parentElement.innerHTML +=
-      '<div class="no-data" style="padding:30px 0">Configurează Firebase pentru a vedea datele.</div>';
-  });
+  document.getElementById('leadsTableWrap').innerHTML =
+    '<div class="no-data">Configurează scriptul Google pentru a vedea datele.</div>';
 }
 
 // ── Chart helpers
-function destroyChart(id) {
-  const key = id.replace('chart','').toLowerCase();
-  const chartId = Object.keys(charts).find(k => id.toLowerCase().includes(k));
-  if (chartId && charts[chartId]) {
-    charts[chartId].destroy();
-    delete charts[chartId];
-  }
+function destroyChart(key) {
+  if (charts[key]) { charts[key].destroy(); delete charts[key]; }
 }
 
 function tooltipStyle() {
